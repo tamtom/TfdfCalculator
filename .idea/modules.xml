@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TfIdfCalculator.iml" filepath="$PROJECT_DIR$/TfIdfCalculator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TfdfCalculator.iml" filepath="$PROJECT_DIR$/TfdfCalculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -1,16 +1,16 @@
 package com.itdeve.tfidfcalculator;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.sql.Struct;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -22,7 +22,13 @@ public class SelectOption extends AppCompatActivity implements View.OnClickListe
     Button documentlength;
     Button s_score;
     String arr[];
-
+    double tfar[][];
+    double tf_idf[][];
+    HashSet<String> set;
+    double idfar[];
+    int ni[];
+    int frequencyar[][];
+    HashMap<Integer, String> curpos;
     public double[][] getTf_idf() {
         return tf_idf;
     }
@@ -50,7 +56,7 @@ public class SelectOption extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    double idfar[];
+
     public int[] getNi() {
         return ni;
     }
@@ -69,8 +75,7 @@ public class SelectOption extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    int ni [] ;
-    HashMap<Integer, String> curpos;
+
 
     public double[][] getTfar() {
         return tfar;
@@ -78,21 +83,10 @@ public class SelectOption extends AppCompatActivity implements View.OnClickListe
 
     public void setTfar(double[][] tfar) {
         this.tfar = tfar;
-        int a [][] = getFrequencyar();
-        tfar = new double[arr.length][curpos.size()];
-        for (int i = 0; i <a.length ; i++) {
-            for (int j = 0; j <a[i].length ; j++) {
-                if(a[i][j]!=0)
-                    tfar[i][j] =  (Math.log(a[i][j]) + 1);
 
-            }
-        }
     }
 
-    double tfar[][] ;
 
-    double tf_idf[][];
-HashSet<String> set ;
 
     public int[][] getFrequencyar() {
         return frequencyar;
@@ -107,6 +101,7 @@ HashSet<String> set ;
                 int f = 0;
 
                 for (int k = 0; k <doc.length ; k++) {
+                    Log.d("the word", doc[k]);
                     if(letter.equals(doc[k]))
                         f++;
                 }
@@ -117,7 +112,7 @@ HashSet<String> set ;
 
     }
 
-    int frequencyar [][] ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,20 +120,27 @@ HashSet<String> set ;
         Intent intent = getIntent();
         curpos = (HashMap<Integer, String>) intent.getSerializableExtra("map");
         frequency = (Button) findViewById(R.id.frequncy);
-        tf = (Button) findViewById(R.id.tf);
+        tf = (Button) findViewById(R.id.tfbutton);
+        tf.setOnClickListener(this);
         idf = (Button) findViewById(R.id.idf);
+        idf.setOnClickListener(this);
         tfandidf = (Button) findViewById(R.id.tfandidf);
+        tfandidf.setOnClickListener(this);
         documentlength = (Button) findViewById(R.id.documentlength);
         s_score = (Button) findViewById(R.id.s_score);
         set = new HashSet<>();
         for(String doc : curpos.values()){
-           if(set.add(doc)){
-               Log.d("string", "added "+doc);
-           }
+            String[] line = doc.split(" ");
+            for (int i = 0; i < line.length; i++) {
+                if (set.add(line[i])) {
+                    Log.d("string set ", "added " + doc);
+                }
+            }
+
         }
         arr = set.toArray(new String[set.size()]);
         for (int i = 0; i <arr.length ; i++) {
-            Log.d("set",arr[i]);
+            Log.d("In set", arr[i]);
         }
         frequency.setOnClickListener(this);
 frequencyar =  new int[arr.length][curpos.size()];
@@ -196,17 +198,110 @@ Intent i = new Intent(SelectOption.this,ResultActivity.class);
         i.putExtra("doc",curpos);
         i.putExtra("type","freq");
         startActivity(i);
-    }
-        else if(v.getId()==R.id.tf){
-getTfar();
+    } else if (v.getId() == R.id.tfbutton) {
+        Log.d("tf", "Called");
+        final boolean[] f = {false};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("select your option");
+        builder.setPositiveButton("using ln", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = true;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "TF");
+                i.putExtra("log", f[0]);
+                startActivity(i);
+            }
+        });
+        builder.setNegativeButton("using log", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = false;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "TF");
+                i.putExtra("log", f[0]);
+                startActivity(i);
+
+            }
+        });
+        builder.show();
+
     }
         else if (v.getId()==R.id.idf){
-    getIdfar();
+        final boolean[] f = {false};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("select your option");
+        builder.setPositiveButton("using ln", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = true;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "TF");
+                i.putExtra("log", f[0]);
+                startActivity(i);
+            }
+        });
+        builder.setNegativeButton("using log", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = false;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "IDF");
+                i.putExtra("log", f[0]);
+                startActivity(i);
+
+            }
+        });
+        builder.show();
+
 
 
     }
         else if(v.getId()==R.id.tfandidf){
-        getTf_idf();
+        final boolean[] f = {false};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("select your option");
+        builder.setPositiveButton("using ln", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = true;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+                i.putExtra("log", f[0]);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "TF-IDF");
+                startActivity(i);
+            }
+        });
+        builder.setNegativeButton("using log", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                f[0] = false;
+                Intent i = new Intent(SelectOption.this, ResultActivity.class);
+                i.putExtra("t", arr);
+                i.putExtra("log", f[0]);
+
+                i.putExtra("doc", curpos);
+                i.putExtra("type", "TF-IDF");
+                startActivity(i);
+
+            }
+        });
+        builder.show();
+
     }
 
     }

@@ -2,9 +2,9 @@ package com.itdeve.tfidfcalculator;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,9 +15,9 @@ import android.widget.EditText;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    EditText doc;
+    Button enter;
  private int N;
-    EditText doc ;
-    Button enter ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                corpus.put(c[0], doc.getText().toString().toLowerCase());
+                c[0]++;
+
+                doc.setText("");
                 if(c[0]-1 ==N){
                     Intent intent = new Intent(MainActivity.this, SelectOption.class);
                     for(String n : corpus.values()){
@@ -57,13 +62,9 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("map", corpus);
                     startActivity(intent);
                 }
-                else {
-                    corpus.put(c[0], doc.getText().toString().toLowerCase());
-                    c[0]++;
                 }
 
 
-            }
         });
     }
 

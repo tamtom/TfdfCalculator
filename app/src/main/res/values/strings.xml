@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tf/Idf Calculator</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_select_option">SelectOption</string>
+    <string name="IfF">Term Weighting fi and total F</string>
+    <string name="title_activity_result">ResultActivity</string>
+
+</resources>
